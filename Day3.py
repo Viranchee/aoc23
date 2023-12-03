@@ -9,25 +9,24 @@ sample1 = """467..114..
 ...$.*....
 .664.598.."""
 sampleSolution1 = 4361
-arr = [467, 35, 633, 617, 592, 755, 664, 598]
+sampleSolution2 = 467835
 
-sample2 = ""
 
 class Day3:
   def __init__(self, dir_name):
     self.dir_name = dir_name
   
   def __text__(self):
-    input_file = str(3) + ".txt"
     text = sample1
-    with open(self.dir_name + "/" + input_file, 'r') as f:
-      text = f.read()
+    # input_file = str(3) + ".txt"
+    # with open(self.dir_name + "/" + input_file, 'r') as f:
+    #   text = f.read()
     return text
 
 
   def makeDS(self, charMatrix: list[list[int]]):
-    numbers = [] # (val, (i,j))
-    specials = dict() # (i, j) -> val
+    numbers = dict[tuple[int, int]: int]() # (i, j) -> val
+    specials = dict[tuple[int, int]: int]() # (i, j) -> val
 
     for i in range(len(charMatrix)):
       number = 0; start = None
@@ -38,26 +37,23 @@ class Day3:
           if start == None:
             start = (i, j)
           number = number * 10 + int(val)
-        elif val == '.':
-          if number != 0:
-            numbers.append((number, start[0], start[1]))
-          number = 0; start = None
         else:
           if number != 0:
-            numbers.append((number, start[0], start[1]))
+            numbers[start] = number
           number = 0; start = None
-          specials[(i,j)] = val
+        if not val == '.':
+            specials[(i,j)] = 0
       if number != 0:
-        numbers.append((number, start[0], start[1]))
+        # numbers.append((number, start[0], start[1]))
+        numbers[start] = number
     
-    print(numbers)
-    print(specials)
-
+    # print(numbers)
+    # print(specials)
     return (numbers, specials)
 
-  def isValid(self, number: tuple[int, int, int], specials: dict[tuple[int, int], int]):
-    (val, i, j) = number
-    lengthOfVal = len(str(val))
+  def adjacentToSymbol(self, number: int, position: tuple[int,int], specials: dict[tuple[int, int], int]):
+    (i, j) = position
+    lengthOfVal = len(str(number))
     
     # i and j box
     iUp = i - 1
@@ -94,11 +90,16 @@ class Day3:
         charMatrix[i][j] = ord(val)
 
     (numbers, specials) = self.makeDS(charMatrix)
-    sum = 0
-    for number in numbers:
-      if self.isValid(number, specials):
-        sum += number[0]
-    print(sum)
+
+    adjacentSum = 0
+    for position in numbers:
+      val = numbers[position]
+      if self.adjacentToSymbol(val, position, specials):
+        adjacentSum += numbers[position]
+    print(adjacentSum)
+
+    sumOfGearRatios = 0
+    
 
 
 
