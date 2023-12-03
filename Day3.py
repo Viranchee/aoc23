@@ -18,9 +18,9 @@ class Day3:
   
   def __text__(self):
     text = sample1
-    # input_file = str(3) + ".txt"
-    # with open(self.dir_name + "/" + input_file, 'r') as f:
-    #   text = f.read()
+    input_file = str(3) + ".txt"
+    with open(self.dir_name + "/" + input_file, 'r') as f:
+      text = f.read()
     return text
 
 
@@ -51,7 +51,8 @@ class Day3:
     # print(specials)
     return (numbers, specials)
 
-  def adjacentToSymbol(self, number: int, position: tuple[int,int], specials: dict[tuple[int, int], int]):
+  def adjacentToSymbol(self, number: int, position: tuple[int,int], specials: dict[tuple[int, int], int]) -> None | tuple[int, int]:
+### Returns the position of the adjacent symbol
     (i, j) = position
     lengthOfVal = len(str(number))
     
@@ -61,15 +62,18 @@ class Day3:
     jLeft = j - 1
     jRight = j + lengthOfVal
     # same line check
-    if (i, jRight) in specials or (i, jLeft) in specials:
-      return True
+    if (i, jRight) in specials:
+      return (i, jRight)
+    if (i, jLeft) in specials:
+      return (i, jLeft)
     # up and down check
     for k in range(lengthOfVal + 2):
-      if (iUp, jLeft + k) in specials or (iDown, jLeft + k) in specials:
-        return True
-      
+      if (iUp, jLeft + k) in specials:
+        return (iUp, jLeft + k)
+      if (iDown, jLeft + k) in specials:
+        return (iDown, jLeft + k)
+    return None
     
-
   def solve(self):
     x = '@'
     # get ascii value of x
@@ -92,17 +96,26 @@ class Day3:
     (numbers, specials) = self.makeDS(charMatrix)
 
     adjacentSum = 0
+    adjacencyTable = dict[tuple[int, int]: list[int]]()
     for position in numbers:
       val = numbers[position]
-      if self.adjacentToSymbol(val, position, specials):
+      symbolPosition = self.adjacentToSymbol(val, position, specials)
+      previous = adjacencyTable.get(symbolPosition, [])
+      if symbolPosition != None:
         adjacentSum += numbers[position]
+        adjacencyTable[symbolPosition] = previous + [val]
+
     print(adjacentSum)
 
     sumOfGearRatios = 0
-    
-
-
-
+    for (symbolPosition, numbers) in adjacencyTable.items():
+      mac = 1
+      if len(numbers) >1:
+        for number in numbers:
+          mac *= number
+        sumOfGearRatios += mac
+    print(sumOfGearRatios)
+        
 
 
 if __name__ == "__main__":
