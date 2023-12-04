@@ -43,19 +43,16 @@ class Day4:
   
   def __text__(self):
     text = sample1
-    # input_file = str(4) + ".txt"
-    # with open(self.dir_name + "/" + input_file, 'r') as f:
-    #   text = f.read()
+    input_file = str(4) + ".txt"
+    with open(self.dir_name + "/" + input_file, 'r') as f:
+      text = f.read()
     return text
 
   def part1(self):
     text = self.__text__()
     for line in text.splitlines():
       tree = self.parser.parse(line)
-      parsed = TreeToDict().transform(tree).children
-      game_number = parsed[0]
-      have = parsed[1]
-      winning = parsed[2]
+      game = TreeToDict().transform(tree).children
 
       
   def part2(self):
