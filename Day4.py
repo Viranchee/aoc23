@@ -6,8 +6,8 @@ Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
 Card 4: 41 92 73 84 69 | 59 84 76 51 58  5 54 83
 Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
 Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11"""
-s1 = [8,2,2,1,0,0]
-s2 = 467835
+s1 = 25183
+s2 = 30
 
 class TreeToDict(Transformer):
   def games(self, items):
@@ -69,7 +69,15 @@ class Day4:
     print(points)
       
   def part2(self):
-    print("unimplemented")
+    won = [0] * len(self.games)
+    for game in self.games:
+      for have in game[1]:
+        if have in game[2]:
+    
+    total = sum(total_cards)
+    print(total)
+
+
 
 if __name__ == "__main__":
   d4 = Day4()
