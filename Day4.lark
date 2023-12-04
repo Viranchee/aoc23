@@ -1,0 +1,15 @@
+// Write Lark to parse this text:
+// Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
+// Card 3:  1 21 53 59 44 | 69 82 63 72 16 21 14  1
+
+start: "Card" gamenumber ":" have "|" winning
+
+
+int : NUMBER
+gamenumber : int
+have : int+
+winning : int+
+
+%import common.NUMBER
+%import common.WS
+%ignore WS
