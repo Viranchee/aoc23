@@ -10,50 +10,63 @@ s1 = [8,2,2,1,0,0]
 s2 = 467835
 
 class TreeToDict(Transformer):
-  def statement(self, items):
-    return items[0].children[0].value
+  def games(self, items):
+    return items
+  
+  def game(self, items):
+    theGame = (items[0], items[1], items[2])
+    return theGame
     
   def gamenumber(self, items):
-    val = items[0].children[0].value
-    return int(val)
+    item = items[0]
+    val = int(items[0].children[0].value)
+    return val
 
   def have(self, items):
-    haves = []
+    haves = set()
     for item in items:
       for token in item.iter_subtrees():
         val = token.children[0].value
-        haves.append(int(val))  
+        haves.add(int(val))  
     return haves
   def winning(self, items):
-    winning = []
+    winning = set()
     for item in items:
       for token in item.iter_subtrees():
         val = token.children[0].value
-        winning.append(int(val))  
+        winning.add(int(val))  
     return winning
 
 class Day4:
   def __init__(self):
     import os
-    self.dir_name = os.path.dirname(__file__)
-    grammar_file = self.dir_name + "/Day4.lark"
-    with open(grammar_file, 'r') as f:
-      self.grammar = f.read()
-    self.parser = Lark(self.grammar, parser='lalr')
-  
-  def __text__(self):
+    dir_name = os.path.dirname(__file__)
+    grammar_file = dir_name + "/Day4.lark"
     text = sample1
     input_file = str(4) + ".txt"
-    with open(self.dir_name + "/" + input_file, 'r') as f:
+    with open(dir_name + "/" + input_file, 'r') as f:
       text = f.read()
-    return text
+    with open(grammar_file, 'r') as f:
+      grammar = f.read()
+      parser = Lark(grammar, parser='lalr')
+    # for line in text.splitlines():
+    #   tree = self.parser.parse(line)
+    #   game = TreeToDict().transform(tree).children[0]
+    #   print(game)
+    tree = parser.parse(text)
+    self.games = TreeToDict().transform(tree).children[0]
+  
 
   def part1(self):
-    text = self.__text__()
-    for line in text.splitlines():
-      tree = self.parser.parse(line)
-      game = TreeToDict().transform(tree).children
-
+    points = 0
+    for game in self.games:
+      score = 1
+      for have in game[1]:
+        if have in game[2]:
+          score <<= 1
+      score >>= 1
+      points += score
+    print(points)
       
   def part2(self):
     print("unimplemented")
@@ -61,4 +74,4 @@ class Day4:
 if __name__ == "__main__":
   d4 = Day4()
   d4.part1()
-  # d4.part2()
+  d4.part2()
