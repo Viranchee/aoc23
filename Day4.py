@@ -69,13 +69,18 @@ class Day4:
     print(points)
       
   def part2(self):
-    won = [0] * len(self.games)
+    total_cards = [1] * len(self.games)
     for game in self.games:
-      for have in game[1]:
-        if have in game[2]:
-    
-    total = sum(total_cards)
-    print(total)
+      winsThisGame = 0
+      for number in game[1]: # I have these numbers
+        if number in game[2]: # Did I win?
+          winsThisGame += 1
+      gameNumber = game[0]
+      cardsForThisGame = total_cards[gameNumber - 1]
+      for i in range(winsThisGame):
+        total_cards[gameNumber + i] += cardsForThisGame
+    result = sum(total_cards)
+    print(result)
 
 
 
